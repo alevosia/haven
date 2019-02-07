@@ -42,9 +42,7 @@ exports.LogMessageEdit = function(oldMessage, updatedMessage) {
         || updatedMessage.author.id == config.OwnerID || !oldMessage.guild) {
             return
     }
-        
     
-    const channel = updatedMessage.message;
     const nick = updatedMessage.member.displayName;
     const avatar = updatedMessage.author.avatarURL;
     const color = 0xbab8b8;
@@ -61,7 +59,7 @@ exports.LogMessageEdit = function(oldMessage, updatedMessage) {
     }
 
     const embed = new Discord.RichEmbed()
-        .setAuthor(`${nick} edited their message in ${channel.name}`, avatar)
+        .setAuthor(`${nick} edited their message in ${updateMessage.channel.name}`, avatar)
         .addField("Previously", oldText)
         .addField("Now", updatedText)
         .setColor(color)

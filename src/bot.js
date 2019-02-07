@@ -65,6 +65,17 @@ Bot.on('ready', () => {
             .then(dev => dev.send(startMessage))
             .catch(err => zxc.error(err));
     }, 5000);
+
+    process.on('uncaughtException', (err) => {
+        zxc.error(err);
+        Bot.users.get(config.DeveloperID).send(err.stack).catch(err => zxc.error(err));
+        process.exit(1);
+    })
+    
+    process.on('unhandledRejection', (err) => {
+        zxc.error(err);
+        Bot.users.get(config.DeveloperID).send(err.stack).catch(err => zxc.error(err));
+    })
 })
 
 Bot.on('error', (error) => {

@@ -1,2 +1,3 @@
-# haven
+# Haven
+
 A multi-purpose bot for Unforsaken Haven's Discord server.

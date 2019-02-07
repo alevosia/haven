@@ -1,0 +1,34 @@
+{
+  "name": "haven",
+  "version": "3.1.0",
+  "description": "A multi-purpose bot for Unforsaken Haven's Discord server.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alevfalse/haven.git"
+  },
+  "author": "Alev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alevfalse/haven/issues"
+  },
+  "homepage": "https://github.com/alevfalse/haven#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "cleverbot.io": "^1.0.4",
+    "discord.js": "^11.4.2",
+    "discord.js-commando": "^0.10.0",
+    "dotenv": "^6.2.0",
+    "firebase-admin": "^7.0.0",
+    "nekos.life": "^2.0.2",
+    "node-opus": "^0.3.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "warframe-worldstate-data": "^0.1.16",
+    "warframe-worldstate-parser": "^2.1.28",
+    "winston": "^3.1.0"
+  }
+}

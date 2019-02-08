@@ -59,7 +59,7 @@ exports.LogMessageEdit = function(oldMessage, updatedMessage) {
     }
 
     const embed = new Discord.RichEmbed()
-        .setAuthor(`${nick} edited their message in ${updateMessage.channel.name}`, avatar)
+        .setAuthor(`${nick} edited their message in ${updatedMessage.channel.name}`, avatar)
         .addField("Previously", oldText)
         .addField("Now", updatedText)
         .setColor(color)

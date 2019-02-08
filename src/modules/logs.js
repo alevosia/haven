@@ -17,13 +17,8 @@ exports.LogMessageDelete = function(message) {
         text = message.content.length <= 300 ? message.content : message.content.substr(0, 300).concat('...');
     }
     
-    const channel = "Unknown";
-    if (message.channel) {
-        channel = message.channel;
-    }
-    
     const embed = new Discord.RichEmbed()
-        .setAuthor(`${nick}'s message was deleted in ${channel.name}`, avatar)
+        .setAuthor(`${nick}'s message was deleted in ${message.channel.name}`, avatar)
         .setDescription(text)
         .setColor(color)
         .setTimestamp();

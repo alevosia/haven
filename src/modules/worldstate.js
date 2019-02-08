@@ -58,7 +58,7 @@ class WarframeWorldState extends EventEmitter {
                         console.log(`${j}: ${news[j].message}`);
                     }
 
-                    let description;
+                    let description = '';
 
                     // fetch the article's content
                     request(news[i].link, (err, res, body) => {
@@ -67,7 +67,7 @@ class WarframeWorldState extends EventEmitter {
                             return zxc.error(`Error Getting Updates: ${res.statusCode}`);
                         }
 
-                        let $ = cheerio.load(body);
+                        const $ = cheerio.load(body);
 
                         const article = $('div.ipsType_normal.ipsType_richText.ipsContained').first();
                         const paragraphs = article.children('p').text().split('\n');

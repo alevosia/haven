@@ -76,7 +76,7 @@ function GetPriceCheckEmbed(data) {
     .setThumbnail(data.thumbnail['url'])
     .setFooter(data.footer['text']);
 
-    let desc = "";
+    let desc = '';
 
     for (let i=0; i<data.fields.length; i++) {
        desc += data.fields[i].name + "\n" + data.fields[i].value;

@@ -109,7 +109,7 @@ exports.AutoHeal = function(infectedList, Bot) {
 
 exports.IsInfected = function(member, infectedList) {
     // checks if the member is in the infected list
-    for(let name in infectedList) {
+    for (let name in infectedList) {
         if (member.displayName == name) {
             return true
         }

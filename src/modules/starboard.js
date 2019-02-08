@@ -58,7 +58,7 @@ exports.UpdateStars = function(reaction, reactor) {
 
                 // set image if it has one
                 if (message.attachments.size >= 1) {
-                    let att = message.attachments.first();
+                    const att = message.attachments.first();
                     att.width ? embed.setImage(att.proxyURL) : null;
                 }
 

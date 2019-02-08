@@ -58,7 +58,7 @@ Bot.on('ready', () => {
             util.SendUpdate(guild, update);
         });
         
-        let startMessage = `${Bot.user.username} reporting for duty!`;
+        const startMessage = `${Bot.user.username} reporting for duty!`;
         console.log(startMessage);
         zxc.info(startMessage);
         Bot.fetchUser(config.DeveloperID)

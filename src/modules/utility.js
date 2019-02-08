@@ -16,7 +16,7 @@ exports.GetRoles = function(member) {
 
     iterable.next(); // skips the @everyone role
 
-    for(let i=1; i<rolesCollection.size; i++) {
+    for (let i=1; i<rolesCollection.size; i++) {
         roles.push(iterable.next().value["name"]);
     }
 
@@ -50,14 +50,19 @@ function GetUptime() {
     const seconds = process.uptime();
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor(seconds % 3600 / 60);
-    let string;
-    
+    let string = '';
+    console.log(string);
+
     if (hours >= 1) string += `${hours}:`
     else string += `00:`
+    console.log(string);
+    
     if (minutes >= 1) string += `0${minutes}`.slice(-2)
     else string += `00`;
+    console.log(string);
 
     string += `:${`0${Math.floor(seconds % 60)}`.slice(-2)}`
+    console.log(string);
 
     return string;
 }

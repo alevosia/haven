@@ -42,15 +42,25 @@ class Updater {
 
                     if (timeLeft < config.GiveawaysUpdateInterval) {
                         zxc.info(`${giveaway.prize} giveaway will end in ${Math.floor(timeLeft/1000)} seconds`);
+
                         setTimeout(() => {
-                            giveaway.end();
-                            this.giveawaysManager.endGiveaway(giveaway.messageId);
+                            giveaway.end()
+                                .then(success => {
+                                    if (success) {
+                                        zxc.info(`Successfully ended ${giveaway.prize} giveaway.`);
+                                        this.giveawaysManager.endGiveaway(giveaway.messageId);
+                                    }
+                                }).catch(err => zxc.error(err));
                         }, timeLeft);
                     }
 
                 } else {
-                    giveaway.end();
-                    this.giveawaysManager.endGiveaway(giveaway.messageId);
+                    giveaway.end().then(success => {
+                        if (success) {
+                            zxc.info(`Successfully ended ${giveaway.prize} giveaway.`);
+                            this.giveawaysManager.endGiveaway(giveaway.messageId);
+                        }
+                    }).catch(err => zxc.error(err));
                 }
             })
         }).catch(err => zxc.error(err));

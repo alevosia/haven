@@ -362,7 +362,8 @@ class GiveawaysCommand extends Command {
                 .setTimestamp(new Date(giveaway.endDate))
                 .setThumbnail(giveaway.imageURL)
                 .setColor(0xf934ff) // peach
-                const looterRole = message.guild.roles.get(config.LooterRoleID);
+                
+        const looterRole = message.guild.roles.get(config.LooterRoleID);
 
         await looterRole.setMentionable(true, `${giveaway.prize} giveaway`).catch(err => zxc.error(err));
         await channel.send(`<@&${looterRole.id}>`).catch(err => zxc.error(err));

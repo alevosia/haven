@@ -33,7 +33,6 @@ module.exports = {
     InactiveRoleID            : "447773868736643074",
     FormaRoleID               : "529697549464895556",
     ForsakenRoleID            : "394408647603650561",
-    GiveawaysRoleID           : "449208381128048641",
     GiveawaysMasterRoleID     : "535524073434906634",
     LooterRoleID              : "535524020649721856",
     MovieNightRoleID          : "518058149186633739",

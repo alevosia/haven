@@ -45,52 +45,86 @@ class Giveaway {
     }
 
     end() {
-        const Bot = require('../bot.js');
-        const channel = Bot.channels.get(config.GiveawaysChannelID);
+        return new Promise((resolve, reject) => {
+            const Bot = require('../bot.js');
+            const channel = Bot.channels.get(config.GiveawaysChannelID);
+    
+            if (!channel) {
+                zxc.error(`Failed to load Giveaways channel and end ${this.prize} giveaway.`);
+                resolve(false);
+            }
+    
+            channel.fetchMessage(this.messageId).then(giveawayMessage => {
+    
+                const giftReaction = giveawayMessage.reactions.get('💝');
+    
+                giftReaction.fetchUsers().then(users => {
+    
+                    users.delete(config.BotID); // removes the bot
+    
+                    // removes the host from the participants if present
+                    if (users.has(this.hostId)) {
+                        users.delete(this.hostId); 
+                    }
+    
+                    const looters = users.keyArray(); // gets all the users' id into an array
+                    const winners = [];
+    
+                    if (looters.length == 0) {
+                        this.endGiveawayMessage(giveawayMessage, winners)
+                            .then(success => {
+                                if (success) {
+                                    return resolve(true);
+                                }
+                            }).catch(err => reject(err));
+                    }
+    
+                    for (let i=0; i<this.winnersCount; i++) {
+                        const index = Math.floor(Math.random() * looters.length);
+                        winners.push(`<@${looters.splice(index, 1)}>`);
+                    }
+                    zxc.info(`Winners: ${winners}`);
+    
+                    this.endGiveawayMessage(giveawayMessage, winners)
+                        .then(success => {
+                            if (success) {
+                                return resolve(true);
+                            }
+                        }).catch(err => reject(err));
 
-        if (!channel) return zxc.info(`Failed to load Giveaways channel and end ${this.prize} giveaway.`);
-
-        channel.fetchMessage(this.messageId).then(giveawayMessage => {
-            const Bot = require('../bot.js'); giftReaction = giveawayMessage.reactions.get('💝');
-
-            giftReaction.fetchUsers().then(users => {
-
-                if (users.has(this.hostId)) users.delete(this.hostId); // removes the host from the participants if present
-                users.delete(config.BotID); // removes the bot
-
-                const looters = users.keyArray(); // gets all the users' id into an array
-                const winners = [];
-
-                if (looters.length == 0) return this.endGiveawayMessage(giveawayMessage, winners); // return if no one joined
-
-                for (let i=0; i<this.winnersCount; i++) {
-                    const index = Math.floor(Math.random() * looters.length);
-                    winners.push(`<@${looters.splice(index, 1)}>`);
-                }
-                zxc.info(`Winners: ${winners}`);
-
-                this.endGiveawayMessage(giveawayMessage, winners);
-
-            }).catch(err => zxc.error(err));
-        }).catch(err => zxc.error(err));
+                }).catch(err => reject(err));
+            }).catch(err => reject(err));
+        })
     }
 
     endGiveawayMessage(giveawayMessage, winners) {
 
-        const embed = new RichEmbed()
-            .setAuthor(`${this.prize} Giveaway Ended`)
-            .addField(`Host:`, `<@${this.hostId}>`)
-            .addField(`Winners:`, (winners.length > 0 ? winners.join(' | ') : 'None'))
-            .setFooter(`Ended`)
-            .setTimestamp(new Date(this.endDate))
-            .setThumbnail(this.imageURL)
-            .setColor(0x000000) // black
+        return new Promise((resolve, reject) => {
 
-        giveawayMessage.edit({embed}).then(endedGiveawayMessage => {
-            const msg = `Congratulations ${winners.join(', ')}! You won the **${this.prize}** giveaway! :tada:\n`
-                + `Contact <@${this.hostId}> for your prize.`;
-            endedGiveawayMessage.channel.send(winners.length > 0 ? msg : `Nobody joined the **${this.prize}** giveaway. :cry:`);
-        }).catch(err => zxc.error(err));
+            try {   
+                const embed = new RichEmbed()
+                .setAuthor(`${this.prize} Giveaway Ended`)
+                .addField(`Host:`, `<@${this.hostId}>`)
+                .addField(`Winners:`, (winners.length > 0 ? winners.join(' | ') : 'None'))
+                .setFooter(`Ended`)
+                .setTimestamp(new Date(this.endDate))
+                .setThumbnail(this.imageURL)
+                .setColor(0x000000) // black
+            } catch (err) {
+                return reject(err);
+            }
+            
+            giveawayMessage.edit({embed}).then(endedGiveawayMessage => {
+
+                const msg = `Congratulations ${winners.join(', ')}! You won the **${this.prize}** giveaway! :tada:\n`
+                    + `Contact <@${this.hostId}> for your prize.`;
+
+                endedGiveawayMessage.channel.send(winners.length > 0 ? msg : `Nobody joined the **${this.prize}** giveaway. :cry:`)
+                    .then(sent => {
+                        resolve(true);
+                    }).catch(err => reject(err));
+            }).catch(err => reject(err));
+        })
     }
 
     get durationString() {

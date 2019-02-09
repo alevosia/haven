@@ -23,8 +23,6 @@ module.exports = class RollDiceCommand extends Command {
 
     run(message, { sides }) {
         const number = Math.floor((Math.random() * sides) + 1);
-        message.channel.send(message.member.displayName + " rolled a " + number + "! :game_die:").then(sentMessage => {
-            zxc.info("Sent: " + sentMessage.content);
-        }).catch(err => zxc.error(err));
+        message.channel.send(message.member.displayName + " rolled a " + number + "! :game_die:").catch(err => zxc.error(err));
     }
 }

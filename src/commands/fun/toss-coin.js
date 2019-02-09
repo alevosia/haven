@@ -16,14 +16,11 @@ module.exports = class TossCoinCommand extends Command {
 
     run(message) {
         const coin = Math.floor((Math.random() * 2) + 1);
+        
         if (coin == 1) {
-            message.channel.send("Heads!").then(sentMessage => {
-            zxc.info("Sent: " + sentMessage.content);
-            }).catch(err => zxc.error(err));
+            message.channel.send("Heads!").catch(err => zxc.error(err));
         } else if (coin == 2) {
-            message.channel.send("Tails!").then(sentMessage => {
-            zxc.info("Sent: " + sentMessage.content);
-            }).catch(err => zxc.error(err));
+            message.channel.send("Tails!").catch(err => zxc.error(err));
         }
     }
 }

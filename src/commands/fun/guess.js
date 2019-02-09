@@ -15,9 +15,7 @@ module.exports = class GuessCommand extends Command {
     run(message) {
         const number = Math.floor((Math.random() * 100) + 1);
 
-        message.reply("Guess the number I'm thinking and win an absurd prize...").then(sentMessage => {
-            zxc.info("Sent: " + sentMessage.content);
-        }).catch(err => zxc.error(err));
+        message.reply("Guess the number I'm thinking and win an absurd prize...").catch(err => zxc.error(err));
 
         // the filter
         const filter = response => response.author == message.author;
@@ -26,25 +24,17 @@ module.exports = class GuessCommand extends Command {
         message.channel.awaitMessages(filter, {maxMatches: 1, time: 10000, errors: ['time']}).then(response => {
             const guess = parseInt(response.first().content);
             if (isNaN(guess)) {
-                message.reply("what?").then(sentMessage => {
-                    zxc.info("Sent: " + sentMessage.content);
-                }).catch(err => zxc.error(err));
+                message.reply("what?").catch(err => zxc.error(err));
 
             } else if (guess === number) {
-                message.reply("Congratulations! DM Alev for your prize. :wink:").then(sentMessage => {
-                    zxc.info("Sent: " + sentMessage.content);
-                }).catch(err => zxc.error(err));
+                message.reply("Congratulations! DM Alev for your prize. :wink:").catch(err => zxc.error(err));
                 
             } else {
-                message.reply("Woops! It was " + (number) + ". Better luck next time! :yum:").then(sentMessage => {
-                    zxc.info("Sent: " + sentMessage.content);
-                }).catch(err => zxc.error(err));
+                message.reply("Woops! It was " + (number) + ". Better luck next time! :yum:").catch(err => zxc.error(err));
             }
 
         }).catch(err => {
-            message.reply("Uh oh! You've run out of time, sorry.").then(sentMessage => {
-                zxc.info("Sent: " + sentMessage.content);
-            }).catch(err => zxc.error(err))
+            message.reply("Uh oh! You've run out of time, sorry.").catch(err => zxc.error(err))
         });
     }
 }

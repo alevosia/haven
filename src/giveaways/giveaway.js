@@ -100,16 +100,16 @@ class Giveaway {
     endGiveawayMessage(giveawayMessage, winners) {
 
         return new Promise((resolve, reject) => {
-
+            const embed = new RichEmbed()
             try {   
-                const embed = new RichEmbed()
-                .setAuthor(`${this.prize} Giveaway Ended`)
-                .addField(`Host:`, `<@${this.hostId}>`)
-                .addField(`Winners:`, (winners.length > 0 ? winners.join(' | ') : 'None'))
-                .setFooter(`Ended`)
-                .setTimestamp(new Date(this.endDate))
-                .setThumbnail(this.imageURL)
-                .setColor(0x000000) // black
+                embed
+                    .setAuthor(`${this.prize} Giveaway Ended`)
+                    .addField(`Host:`, `<@${this.hostId}>`)
+                    .addField(`Winners:`, (winners.length > 0 ? winners.join(' | ') : 'None'))
+                    .setFooter(`Ended`)
+                    .setTimestamp(new Date(this.endDate))
+                    .setThumbnail(this.imageURL)
+                    .setColor(0x000000) // black
             } catch (err) {
                 return reject(err);
             }

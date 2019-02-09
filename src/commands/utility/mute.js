@@ -31,9 +31,7 @@ module.exports = class MuteCommand extends Command {
         if (!member.roles.has(config.MutedRoleID)) {
 
             // asks for a reason
-            message.reply("please provide a reason. Mute " + member.displayName + " for: ").then(sentMessage => {
-                zxc.info("Sent: " + sentMessage.content);
-            }).catch(err => zxc.error(err));
+            message.reply("please provide a reason. Mute " + member.displayName + " for: ").catch(err => zxc.error(err));
 
             // the filter which checks if the responder is the author of the command
             const filter = response => response.author == message.author;
@@ -41,7 +39,6 @@ module.exports = class MuteCommand extends Command {
             message.channel.awaitMessages(filter, {maxMatches: 1, time: 30000, errors: ['time']}).then(response => {
 
                 const reason = response.first().content;
-                const member = message.mentions.members.first();
 
                 // removes all the roles of the mentioned member then adds the Muted role
                 member.setRoles([config.MutedRoleID], reason).then(mutedMember => {

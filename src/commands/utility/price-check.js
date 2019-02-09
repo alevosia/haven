@@ -26,18 +26,18 @@ module.exports = class PriceCheckCommand extends Command {
     
     run(message, { item }) {
         if (message.channel.id == config.BotsSpamChannelID) {
-    
-            GetPriceData(item).then(data => {
-                if (data[0].thumbnail) {
-                    message.react('✅').catch(err => zxc.error(err));
-                    message.channel.send(GetPriceCheckEmbed(data[0]));
-                } else {
-                    message.react('❌').catch(err => zxc.error(err));
-                    message.reply("no luck. The item may not be tradable, a riven, or you're spelling needs improvement. " +
-                    "For rivens, try asking others for a price check at " + message.guild.channels.get(config.RivensChannelID) + " channel.")
-                    .then(sent => zxc.info(sent.content)).catch(err => zxc.error(err));
-                }
-                
+            message.reply(`getting data...`).then(sent => {
+                GetPriceData(item).then(data => {
+                    if (data[0].thumbnail) {
+                        message.react('✅').catch(err => zxc.error(err));
+                        sent.edit(GetPriceCheckEmbed(data[0])).catch(err => zxc.error(err));
+                    } else {
+                        message.react('❌').catch(err => zxc.error(err));
+                        sent.edit("no luck. The item may not be tradable, a riven, or you're spelling needs improvement. " +
+                        "For rivens, try asking others for a price check at " + message.guild.channels.get(config.RivensChannelID) + " channel.")
+                            .catch(err => zxc.error(err));
+                    }
+                })
             }).catch(err => {
                 zxc.error(err);
                 message.reply(err).then(sentMessage => {

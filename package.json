@@ -1,6 +1,6 @@
 {
   "name": "haven",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "A multi-purpose bot for Unforsaken Haven's Discord server.",
   "main": "src/index.js",
   "scripts": {
@@ -30,8 +30,11 @@
     "node-opus": "^0.3.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
+    "simple-youtube-api": "^5.1.1",
+    "syllable": "^3.4.0",
     "warframe-worldstate-data": "^0.1.16",
     "warframe-worldstate-parser": "^2.1.28",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "ytdl-core": "^0.29.1"
   }
 }

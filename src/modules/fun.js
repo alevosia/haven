@@ -183,6 +183,7 @@ exports.OneWordStory = function(message, lastPerson) {
  * @param {Message} message
  */
 exports.CheckOneWordStoryEdit = function(message) {
+
     const word = message.content;
 
     if (word.includes(" ") || word.includes("\n")|| word.includes("_")) {
@@ -195,6 +196,7 @@ exports.CheckOneWordStoryEdit = function(message) {
 }
 
 exports.CleverBot = function(message, clever) {
+
     message.channel.startTyping();
 
     let text = message.content;
@@ -202,11 +204,16 @@ exports.CleverBot = function(message, clever) {
     text = text.replace("<@432912965130387456>", "").trim();
     
     zxc.info(`${message.guild ? `Mentioned by ${message.member.displayName}` : `DM from ${message.author.username}`}: ${text}`);
-    clever.ask(text, function(err, response) {
+    
+    clever.ask(text, (err, response) => {
+
         if (err) return message.reply("I am speechless.").catch(err => zxc.error(err));
+
         message.channel.stopTyping(true);
+
         message.reply(response).then(sent=> {
-            zxc.info(`Replied to ${message.author.username}: ${response}`);
+            zxc.info(`Replied to ${message.author.username}: ${sent.content}`);
         }).catch(err => zxc.error(err));
+
     });
 }

@@ -8,15 +8,27 @@ const config  = require('./config.js');
 // my modules
 const WarframeWordldState = require('./modules/worldstate.js');
 const reg     = require('./modules/regulation.js');   // regulation of members
-const mod     = require('./modules/moderation.js');   // moderation of chat
+const filter  = require('./modules/filter.js');   // moderation of chat
 const util    = require('./modules/utility.js');
 const logs    = require('./modules/logs.js');         // member join/leave/kick etc. and message logs
 const fun     = require('./modules/fun.js');          // fun features
 const star    = require('./modules/starboard.js');    // upvoting messages
+const haiku   = require('./modules/haiku.js');        // detects haikus
 const zxc     = require('./modules/logger.js');       // winston logger
 
 // global variables
-const cleverBot = new CleverBot(process.env.CLEVER_USER, process.env.CLEVER_KEY).setNick('Haven');
+let cleverBot;
+if (process.env.CLEVER_USER) {
+    if (process.env.CLEVER_KEY) {
+        cleverBot = new CleverBot(process.env.CLEVER_USER, process.env.CLEVER_KEY);
+        cleverBot.setNick('Haven');
+    } else {
+        console.error('No CleverBot Key.');
+    }
+} else {
+    console.error('No CleverBot User.');
+}
+
 let lastPerson  = '@@@';
 
 // Client
@@ -82,88 +94,92 @@ Bot.on('ready', () => {
     })
 })
 
-Bot.on('error', (error) => {
-    const msg = `<=== ERROR EVENT ===>\n\`\`\`${error.name}: ${error.message}\`\`\``
-    zxc.error(msg);
-    Bot.fetchUser(config.DeveloperID).then(user => { user.send(msg).catch((err) => zxc.error(err)) })
+Bot.on('error', (err) => {
+    zxc.error(err.stack);
+    Bot.fetchUser(config.DeveloperID)
+        .then(user => { 
+            user.send(err.stack).catch((err) => zxc.error(err)) 
+        })
+        .catch(err => zxc.error(err));
+})
 
-}).on('commandError', (command, error, message) => {
-    const msg = `<=== COMMAND ERROR ===>`
-            +`\n\`\`\`${error.name}: ${error.message}`
-            + `\nCommand: ${command.name}`
-            + `\nMessage: ${message.content} from ${message.member ? message.member.displayName : message.author.username}\`\`\``;
+Bot.on('commandError', (command, err, message) => {
+    const msg = `${err.name}: ${err.message}`
+            + `\`\`\`Command: ${command.name}`
+            + `\nMessage: ${message.content} from ${message.guild ? message.member.displayName : message.author.username}\`\`\``;
     zxc.error(msg);
     Bot.fetchUser(config.DeveloperID).then(user => {
         user.send(msg).catch((err) => zxc.error(err));
     })
+    .catch(err => zxc.error(err));
+})
 
-}).on('guildMemberAdd', (pendingMember) => {
+Bot.on('guildMemberAdd', (pendingMember) => {
     logs.LogServerJoin(pendingMember);
     reg.SetPendingRole(pendingMember);
+})
 
-}).on('guildMemberRemove', (removedMember) => {
+Bot.on('guildMemberRemove', (removedMember) => {
     logs.LogKickOrLeave(removedMember);
+})
 
-}).on('guildMemberUpdate', (oldMember, newMember) => {
+Bot.on('guildMemberUpdate', (oldMember, newMember) => {
     reg.PreventManualMemberRoleSetting(oldMember, newMember);
+})
 
-}).on('guildBanAdd', (guild, bannedUser) => {
+Bot.on('guildBanAdd', (guild, bannedUser) => {
     logs.LogBan(guild, bannedUser);
+})
 
-}).on('guildBanRemove', (guild, removedUser) => {
+Bot.on('guildBanRemove', (guild, removedUser) => {
     logs.LogRevokeBan(guild, removedUser);
+})
 
-}).on('messageReactionAdd', (reaction, reactor) => {
+Bot.on('messageReactionAdd', (reaction, reactor) => {
     if (reaction.emoji.name == '⭐') {
         star.UpdateStars(reaction, reactor);
     } else if (reaction.message.channel.id == config.PendingChannelID) {
         reg.PendingMemberVerification(reaction, reactor);
     }
+})
 
-}).on('messageReactionRemove', (reaction, reactor) => {
+Bot.on('messageReactionRemove', (reaction, reactor) => {
     if (reaction.emoji.name == '⭐' && reactor.id != reaction.message.author.id) {
         star.UpdateStars(reaction, reactor);
     }
+})
 
-}).on('messageDelete', (message) => {
+Bot.on('messageDelete', (message) => {
     logs.LogMessageDelete(message);
+})
 
-}).on('messageDeleteBulk', (messages) => {
+Bot.on('messageDeleteBulk', (messages) => {
     zxc.info(`Bulk Deleted ${messages.size} messages.`);
+})
 
-}).on('messageUpdate', (oldMessage, updatedMessage) => {
+Bot.on('messageUpdate', (oldMessage, updatedMessage) => {
     logs.LogMessageEdit(oldMessage, updatedMessage);
 
     if (updatedMessage.channel.id == config.OneWordStoryChannelID) {
         fun.CheckOneWordStoryEdit(updatedMessage);
     }
+})
 
-}).on('message', (message) => {
+Bot.on('message', (message) => {
     if (message.author.bot) return;
-
-    // chat bot - replies when dm'd or mentioned in guild and not in one word story channel
-    if (!message.guild || (message.isMentioned(Bot.user) && message.channel.id != config.OneWordStoryChannelID)) {
-        return fun.CleverBot(message, cleverBot);
-    }
 
     if (message.channel.id == config.OneWordStoryChannelID) {
         return fun.OneWordStory(message, lastPerson).then(name => { 
             lastPerson = name; 
         });
+    
+    // chat bot replies when dm'd or mentioned in guild
+    } else if (!message.guild || message.isMentioned(Bot.user)) {
+        return fun.CleverBot(message, cleverBot);
     }
 
-    mod.ProfanityFilter(message);
-
-    if (message.content.toLowerCase().startsWith('h!')) {
-        message.reply(`my new command prefix is \`${Bot.commandPrefix}\`.`);
-    }
-    // if the message is not posted on the bots spam channel and contains a bot prefix
-    if (message.channel.id != config.BotsSpamChannelID)
-        if (mod.ContainsBotCommand(message)) return;
-
-    // if the message is not posted on the trading channel and contains a trading message
-    if (message.channel.id != config.TradingChannelID)
-        if (mod.ContainsTradingMessage(message)) return;
+    filter(message);
+    haiku(message);
 })
 
 module.exports = Bot;

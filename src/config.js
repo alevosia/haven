@@ -58,9 +58,7 @@ module.exports = {
     UsefulAlertsRewards       : ["nitain", "aura", "argonCrystal", "reactor", "catalyst", "forma", "exilus"],
 
     // Moderation
-    Profanities               : ["fuck", "shit", "bitch", "asshole", "motherfucker"],
-    TradingMessages           : ["wtb", "wts"],
-    BotsPrefixes              : ["n!", "g!"],
+    Profanities               : ["shit", "bitch", "asshole", "motherfucker", "fuck you"],
 
     // Member Verification
     VerifiedEmojiName         : "verified",

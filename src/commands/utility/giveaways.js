@@ -41,7 +41,7 @@ class GiveawaysCommand extends Command {
             return message.reply(`please use giveaways command at ${channel} channel.`);
         }
 
-        switch(args.action)
+        switch(args.action.toLowerCase())
         {
         case 'create':
             if (this.creating) return message.reply(`a giveaway is still being set up.`);

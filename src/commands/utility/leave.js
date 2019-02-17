@@ -36,7 +36,7 @@ module.exports = class JoinRoleCommand extends Command {
 
         const member = message.member;
 
-        switch(role)
+        switch(role.toLowerCase())
         {
         case 'cetus night':
             // checks if the author doesn't have the cetus night role yet

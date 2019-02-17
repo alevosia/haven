@@ -2,9 +2,11 @@
 const { CommandoClient } = require('discord.js-commando');
 const CleverBot = require('cleverbot.io');
 
+// server exclusive  configuration
+const config  = require('./config.js');
+
 // my modules
 const WarframeWordldState = require('./modules/worldstate.js');
-const config  = require('./config.js');
 const reg     = require('./modules/regulation.js');   // regulation of members
 const mod     = require('./modules/moderation.js');   // moderation of chat
 const util    = require('./modules/utility.js');
@@ -14,9 +16,8 @@ const star    = require('./modules/starboard.js');    // upvoting messages
 const zxc     = require('./modules/logger.js');       // winston logger
 
 // global variables
-const cleverBot = new CleverBot(process.env.CLEVER_USER, process.env.CLEVER_KEY);
-cleverBot.setNick('Haven');
-let lastPerson = '@@@';
+const cleverBot = new CleverBot(process.env.CLEVER_USER, process.env.CLEVER_KEY).setNick('Haven');
+let lastPerson  = '@@@';
 
 // Client
 const Bot = new CommandoClient({ 
@@ -57,7 +58,7 @@ Bot.on('ready', () => {
         }).on('update', update => {
             util.SendUpdate(guild, update);
         });
-        
+
         const startMessage = `${Bot.user.username} reporting for duty!`;
         console.log(startMessage);
         zxc.info(startMessage);
@@ -140,17 +141,17 @@ Bot.on('error', (error) => {
 }).on('message', (message) => {
     if (message.author.bot) return;
 
+    // chat bot - replies when dm'd or mentioned in guild and not in one word story channel
+    if (!message.guild || (message.isMentioned(Bot.user) && message.channel.id != config.OneWordStoryChannelID)) {
+        return fun.CleverBot(message, cleverBot);
+    }
+
     if (message.channel.id == config.OneWordStoryChannelID) {
         return fun.OneWordStory(message, lastPerson).then(name => { 
             lastPerson = name; 
         });
     }
 
-    // chat bot - replies when dm'd or mentioned in guild and not in one word story channel
-    if (!message.guild || (message.isMentioned(Bot.user) && message.channel.id != config.OneWordStoryChannelID)) {
-        return fun.CleverBot(message, cleverBot);
-    }
-        
     mod.ProfanityFilter(message);
 
     if (message.content.toLowerCase().startsWith('h!')) {

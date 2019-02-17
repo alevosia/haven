@@ -45,22 +45,52 @@ exports.UpdateStars = function(reaction, reactor) {
             // if the star count is more than or equal to the minimum
             if (starCount >= config.MinStarboardStars) {
 
-                let content = message.content.length <= 300 ? message.content : message.content.substr(1, 300).concat('...');
-                content += `\n\n[Jump to Message](${message.url})`;
+                const text = message.content.length <= 300 ? message.content : message.content.substr(0, 300).concat('...');
 
+                // EMBED ======================================================================================
                 const embed = new RichEmbed()
-                    .setAuthor(`${starCount} ⭐`)
-                    .addField(`Author:`, `<@${message.author.id}>`, true)
-                    .addField(`Channel:`, message.channel, true)
-                    .addField(`Message:`, content)
+                    .setAuthor(`${starCount} ⭐`) // star emoji
                     .setThumbnail(message.author.displayAvatarURL)
-                    .setColor(0xFFFF00)
+                    .addField('Author:', message.author, true)
+                    .addField('Channel:', message.channel, true)
+                    .setColor(0xFFD700);
 
-                // set image if it has one
-                if (message.attachments.size >= 1) {
+                if (message.embeds.length > 0) {
+
+                    const emb = message.embeds[0];
+            
+                    console.log(`Embed Type: ${emb.type}`);
+            
+                    let description = '';
+            
+                    if (text) description += `${message.content}\n\n`;
+                    if (emb.author) {
+                        if (emb.author.url) description += `**[${emb.author.name}](${emb.author.url})**\n`;
+                        else description += `**${emb.author.name}**\n`;
+                    }
+                    if (emb.title) description += `**${emb.title}**\n`;
+                    if (emb.description) description += `${emb.description}\n`;
+                    if (emb.image) embed.setImage(emb.image.proxyURL);
+                    if (emb.thumbnail) embed.setImage(emb.thumbnail.proxyURL);
+                    
+                    description += `\n[Jump To Message](${message.url})`;
+                    embed.addField('Message:', description);
+            
+                } else if (message.attachments.size > 0) {
+            
                     const att = message.attachments.first();
-                    att.width ? embed.setImage(att.proxyURL) : null;
+                    const filesizeString = att.filesize > 1000000 ? `${Number(att.filesize / 1000000).toFixed(2)} MB`
+                                            : `${Number(att.filesize / 1000).toFixed(2)} KB`;
+            
+                    if (text) embed.addField('Message:', text);
+                    embed.addField('File:', `[${att.filename}](${att.url}) - ${filesizeString}`
+                                + `\n\n[Jump To Message](${message.url})`);
+                    if (att.width) embed.setImage(att.url);
+            
+                } else if (text) {
+                    embed.addField('Message:', text);
                 }
+                // END OF EMBED =================================================================================
 
                 // if the document has a starboardMessageID i.e. already posted on starboard
                 // edit the starboard message with the new stars count

@@ -112,7 +112,7 @@ exports.UpdateStars = function(reaction, reactor) {
                 else { 
                     starboardChannel.send({embed})
                         .then(sent => {
-                            zxc.info(`Posted a message on Starboard channel.`);
+                            zxc.info(`Posted ${message.member.displayName}'s message on Starboard channel.`);
                             docRef.update({ 'starboardMessageID': sent.id }).catch(err => zxc.error(err));
                         }).catch(err => zxc.error(err));
                 }
@@ -120,7 +120,7 @@ exports.UpdateStars = function(reaction, reactor) {
             // if the starCount goes below the minimum and has a starboardMessageID i.e. already posted on starboard
             // delete the message from the starboard channel and unset its starboardMessageID
             } else if (starCount < config.MinStarboardStars && snapshot.data().starboardMessageID) {
-                zxc.info(`${message.author.username}'s message has gone below ${config.MinStarboardStars} stars.`)
+                zxc.info(`${message.member.displayName}'s message has gone below ${config.MinStarboardStars} stars.`)
                 starboardChannel.fetchMessage(snapshot.data().starboardMessageID)
                     .then(msg => {
                         msg.delete().then(msg => {

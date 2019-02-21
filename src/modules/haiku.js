@@ -4,22 +4,17 @@ const { RichEmbed, Message } = require('discord.js');
 
 function valid(str) {
     let regexp = /^[a-zA-Z\s\n.,?!]*$/;
-    const result = regexp.test(str);
-    console.log(`Valid: ${result}`);
-    return result;
+    return regexp.test(str);
 }
 
 function count(str) {
     return syllable(str.replace(/[.,?!]/g, ''));
 }
 
-const punct = /[.,?!]/g
 /**
  * @param {Message} message
  */
 module.exports = function(message) {
-    console.time('Haiku2');
-    console.log('\n'+message.content);
 
     if (message.author.bot || message.content.length > 80 || !valid(message.content)) return;
 
@@ -27,8 +22,6 @@ module.exports = function(message) {
         .replace(/\n|\s{2,}/g, ' ')  // replace newlines and duplicate spaces with  single space
         .trim() // remove trailing spaces
         .split(' ');
-
-    console.log(words);
 
     if (words.length > 17) return;
 
@@ -38,10 +31,8 @@ module.exports = function(message) {
     // loop for each word in the message
     for (let i=0; i<words.length; i++) {
         
-        console.log(`${words[i].replace(punct, '')}: ${count(words[i])} : ${spellChecker.isMisspelled(words[i].replace(punct, ''))}`);
-        
         // check if the word is misspelled and return if true
-        if (spellChecker.isMisspelled(words[i].replace(punct, ''))) return;
+        if (spellChecker.isMisspelled(words[i].replace(/[.,?!]/g, ''))) return;
 
         // if the total is less than 5 (first line)
         if (total < 5) {
@@ -75,5 +66,4 @@ module.exports = function(message) {
         .setColor(0x84e184);
 
     message.channel.send(embed).catch(err => console.error(err));
-    console.timeEnd('Haiku2');
 }

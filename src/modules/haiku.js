@@ -1,21 +1,34 @@
 const syllable = require('syllable');
 const spellChecker = require('spellchecker');
-const { RichEmbed } = require('discord.js');
+const { RichEmbed, Message } = require('discord.js');
 
-function hasNumber(str) {
-    let regexp = /\d/g;
-    return regexp.test(str);
-} 
+function valid(str) {
+    let regexp = /^[a-zA-Z\s\n.,?!]*$/;
+    const result = regexp.test(str);
+    console.log(`Valid: ${result}`);
+    return result;
+}
 
+function count(str) {
+    return syllable(str.replace(/[.,?!]/g, ''));
+}
+
+const punct = /[.,?!]/g
+/**
+ * @param {Message} message
+ */
 module.exports = function(message) {
+    console.time('Haiku2');
+    console.log('\n'+message.content);
 
-    if (message.author.bot || hasNumber(message.content)) return;
+    if (message.author.bot || message.content.length > 80 || !valid(message.content)) return;
 
     const words = message.content
-        .replace(/\n/g, ' ')     // replace newlines with space
-        .replace(/\s+/g, ' ')    // replace duplicate spaces with one
-        .trim()                  // remove trailing spaces
+        .replace(/\n|\s{2,}/g, ' ')  // replace newlines and duplicate spaces with  single space
+        .trim() // remove trailing spaces
         .split(' ');
+
+    console.log(words);
 
     if (words.length > 17) return;
 
@@ -25,26 +38,27 @@ module.exports = function(message) {
     // loop for each word in the message
     for (let i=0; i<words.length; i++) {
         
+        console.log(`${words[i].replace(punct, '')}: ${count(words[i])} : ${spellChecker.isMisspelled(words[i].replace(punct, ''))}`);
+        
         // check if the word is misspelled and return if true
-        console.log(`${words[i]}: ${syllable(words[i])} : ${spellChecker.isMisspelled(words[i])}`);
-        if (spellChecker.isMisspelled(words[i])) return;
+        if (spellChecker.isMisspelled(words[i].replace(punct, ''))) return;
 
         // if the total is less than 5 (first line)
         if (total < 5) {
 
-            total += syllable(words[i]); // add the syllable of the word to the total
+            total += count(words[i]);    // add the number of syllables of the word to the total
             if (total > 5) return;       // return if the total is now greater than 5
             haiku[0].push(words[i]);     // else add the word to the first line of the haiku
 
         } else if (total < 12) {
 
-            total += syllable(words[i]);
+            total += count(words[i]);
             if (total > 12) return;
             haiku[1].push(words[i]);
 
         } else {
 
-            total += syllable(words[i]);
+            total += count(words[i]);
             if (total > 17) return;
             haiku[2].push(words[i]);
         }
@@ -61,4 +75,5 @@ module.exports = function(message) {
         .setColor(0x84e184);
 
     message.channel.send(embed).catch(err => console.error(err));
+    console.timeEnd('Haiku2');
 }

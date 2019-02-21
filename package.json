@@ -1,10 +1,10 @@
 {
   "name": "haven",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "A multi-purpose bot for Unforsaken Haven's Discord server.",
-  "main": "src/index.js",
+  "main": "src/haven.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/haven.js"
   },
   "repository": {
     "type": "git",

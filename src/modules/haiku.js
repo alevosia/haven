@@ -26,6 +26,7 @@ module.exports = function(message) {
     for (let i=0; i<words.length; i++) {
         
         // check if the word is misspelled and return if true
+        console.log(`${words[i]}: ${syllable(words[i])} : ${spellChecker.isMisspelled(words[i])}`);
         if (spellChecker.isMisspelled(words[i])) return;
 
         // if the total is less than 5 (first line)

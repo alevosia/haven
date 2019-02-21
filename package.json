@@ -36,7 +36,6 @@
     "warframe-worldstate-data": "^0.1.32",
     "warframe-worldstate-parser": "^2.1.30",
     "winston": "^3.1.0",
-    "ytdl-core": "^0.29.1",
     "ytdl-core-discord": "^1.0.2"
   }
 }

@@ -9,7 +9,11 @@ module.exports = class BakaCommand extends Command {
             group: 'images',
             memberName: 'baka',
             description: 'Sends a baka GIF',
-            guildOnly: true
+            guildOnly: true,
+            throttling: {
+                usages: 1,
+                duration: 60
+            }
         });
     }
 

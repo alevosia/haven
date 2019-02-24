@@ -9,7 +9,11 @@ module.exports = class CuddleCommand extends Command {
             group: 'images',
             memberName: 'cuddle',
             description: 'Sends a cuddle GIF',
-            guildOnly: true
+            guildOnly: true,
+            throttling: {
+                usages: 1,
+                duration: 60
+            }
         });
     }
 

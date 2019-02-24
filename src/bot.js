@@ -80,6 +80,7 @@ Bot.on('ready', () => {
     }, 5000);
 
     process.on('uncaughtException', (err) => {
+        console.error(err);
         zxc.error(err);
         Bot.users.get(config.DeveloperID).send(err.stack)
             .then(sent => {
@@ -89,6 +90,7 @@ Bot.on('ready', () => {
     })
     
     process.on('unhandledRejection', (err) => {
+        console.error(err);
         zxc.error(err);
         Bot.users.get(config.DeveloperID).send(err.stack).catch(err => zxc.error(err));
     })

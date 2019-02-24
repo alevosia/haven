@@ -5,8 +5,17 @@ const neko  = new client();
 const zxc = require('../modules/logger.js'); // winston logger
 
 exports.SFW = async function(message) {
-    const category = (message.content.substring(config.prefix.length).toLowerCase())
-    let url;
+
+    let category;
+
+    if (message.content.startsWith(config.prefix)) {
+        category = message.content.substring(config.prefix.length).toLowerCase()
+    } else {
+        const args = message.content.split(' ');
+        category = args[1];
+    }
+
+    let url = '';
 
     switch(category)
     {
@@ -21,6 +30,7 @@ exports.SFW = async function(message) {
         case 'slap'     : await neko.sfw.slap().then(neko => url = neko.url).catch(err => zxc.error(err));      break;
         case 'smug'     : await neko.sfw.smug().then(neko => url = neko.url).catch(err => zxc.error(err));      break;
         case 'tickle'   : await neko.sfw.tickle().then(neko => url = neko.url).catch(err => zxc.error(err));    break;
+
     }
 
     if (url.length > 0) {

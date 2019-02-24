@@ -9,7 +9,11 @@ module.exports = class HugCommand extends Command {
             group: 'images',
             memberName: 'neko',
             description: 'Sends an image of a cat',
-            guildOnly: true
+            guildOnly: true,
+            throttling: {
+                usages: 1,
+                duration: 60
+            }
         });
     }
 

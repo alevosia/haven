@@ -20,7 +20,7 @@ module.exports = class NSFWCommand extends Command {
             ],
             throttling: {
                 usages: 3,
-                duration: 10
+                duration: 60
             }
         });
     }

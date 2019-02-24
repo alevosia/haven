@@ -9,7 +9,11 @@ module.exports = class HugCommand extends Command {
             group: 'images',
             memberName: 'tickle',
             description: 'Sends a tickle GIF',
-            guildOnly: true
+            guildOnly: true,
+            throttling: {
+                usages: 1,
+                duration: 60
+            }
         });
     }
 

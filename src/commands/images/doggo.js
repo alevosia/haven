@@ -9,7 +9,11 @@ module.exports = class DoggoCommand extends Command {
             group: 'images',
             memberName: 'doggo',
             description: 'Sends an image of a dog',
-            guildOnly: true
+            guildOnly: true,
+            throttling: {
+                usages: 1,
+                duration: 60
+            }
         });
     }
 

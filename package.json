@@ -26,16 +26,16 @@
     "erlpack": "github:hammerandchisel/erlpack",
     "firebase-admin": "^7.0.0",
     "libsodium-wrappers": "^0.7.4",
-    "nekos.life": "^2.0.2",
+    "nekos.life": "^2.0.4",
     "node-opus": "^0.3.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "simple-youtube-api": "^5.1.1",
     "spellchecker": "^3.5.1",
     "syllable": "^3.4.0",
-    "warframe-worldstate-data": "^0.1.32",
-    "warframe-worldstate-parser": "^2.1.30",
-    "winston": "^3.1.0",
-    "ytdl-core-discord": "^1.0.2"
+    "warframe-worldstate-data": "^0.1.40",
+    "warframe-worldstate-parser": "^2.3.4",
+    "winston": "^3.2.1",
+    "ytdl-core-discord": "^1.0.3"
   }
 }

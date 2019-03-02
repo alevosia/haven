@@ -28,7 +28,7 @@ class WarframeWorldState extends EventEmitter {
     refresh() {
         this.worldStateData.then(worldstateData => {
             const worldState = new WorldState(worldstateData);
-            this.getAlerts(worldState);
+            //this.getAlerts(worldState);
             this.getCetusTime(worldState);
             this.getUpdates(worldState);
             //this.getBaroStatus(worldState);

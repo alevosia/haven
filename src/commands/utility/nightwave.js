@@ -24,7 +24,13 @@ class NightwaveCommand extends Command {
 
     async run(message) {
 
-        if (this.message) this.message.delete();
+        if (this.message) {
+            try {
+                this.message.delete();
+            } catch (err) {
+                console.error(err);
+            }
+        }
 
         const status = await message.reply(`getting nightwave information...`);
 
@@ -45,6 +51,8 @@ class NightwaveCommand extends Command {
         console.timeEnd(`Worldstate API`);
 
         const challenges = data.nightwave.activeChallenges;
+
+        console.log(challenges);
 
         let daily = [];
         let weekly = [];
@@ -162,8 +170,7 @@ class NightwaveCommand extends Command {
             embed.addField(name, final.join('\n'), true);
         }
 
-        status.edit(embed);
-        
+        this.message = await status.edit(embed);
     }
 
 

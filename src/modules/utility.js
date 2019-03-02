@@ -23,25 +23,34 @@ exports.GetRoles = function(member) {
 }
 
 let activity = 0;
-exports.UpdateActivity = function(Bot) {
+exports.UpdateActivity = async function(Bot) {
 
-    switch(activity)
+    switch(activity++)
     {
     case 0:
         const worldStateURL = "http://content.warframe.com/dynamic/worldState.php";
-        request.get(worldStateURL, { family: 4, simple: true })
-            .then(worldstateData => {
-                const cetus = new WorldState(worldstateData).cetusCycle;
-                Bot.user.setActivity(`Cetus: ${cetus.shortString}`, {type: 'WATCHING'}).catch(err => zxc.error(err));
-            }).catch((err) => zxc.error(err));
-        activity++;
+        let data;
+        try {
+            data = await request(worldStateURL, { family: 4, simple: true });
+        } catch (err) {
+            return zxc.error(err);
+        }
+        const cetus = new WorldState(data).cetusCycle;
+        Bot.user.setActivity(`Cetus: ${cetus.shortString}`, {type: 'WATCHING'}).catch(err => zxc.error(err));
         break;
 
     case 1:
         Bot.user.setActivity(`Uptime: ${GetUptime()}`, { type: 'WATCHING' }).catch(err => zxc.error(err));
+        break;
+
+    case 2:
+        let used = process.memoryUsage().rss / 1024 / 1024;
+        used = Math.round(used * 100) / 100;
+        Bot.user.setActivity(`Memory Usage: ${used} MB`, { type: 'WATCHING' });
         activity = 0;
         break;
     }
+    
 }
 
 function GetUptime() {

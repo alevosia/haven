@@ -168,13 +168,18 @@ class NightwaveCommand extends Command {
 
 
     static timeString(ms) {
-        const seconds = ms / 1000;
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor(seconds % 3600 / 60);
-        const string = `${hours >= 1 ? `${hours}:` : ''}`
-			         + `${hours >= 1 ? `0${minutes}`.slice(-2) : minutes}:`
-                     + `${`0${Math.floor(seconds % 60)}`.slice(-2)}`;
-        
+        const duration = ms / 1000;
+
+        const days = Math.floor(duration / 86400);
+        const hours = Math.floor(duration % 86400 / 3600);
+        const minutes = Math.floor(duration % 3600 / 60);
+        const seconds = Math.floor(duration % 60);
+    
+        const string = `${ (days ? ` ${days}d` : '') }` +
+                     `${ (hours ? ` ${hours}h` : '') }` +
+                     `${ (minutes ? ` ${minutes}m` : '') }` +
+                     `${ (seconds ? ` ${seconds}s`: '') }`;
+    
         return string;
     }
 

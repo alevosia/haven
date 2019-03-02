@@ -1,6 +1,7 @@
 const { Command } = require('discord.js-commando');
 const { RichEmbed } = require('discord.js');
 const request = require('request-promise');
+const zxc = require('../../modules/logger');
 
 class NightwaveCommand extends Command {
     constructor(Bot) {
@@ -28,7 +29,7 @@ class NightwaveCommand extends Command {
             try {
                 this.message.delete();
             } catch (err) {
-                console.error(err);
+                zxc.error(err);
             }
         }
 
@@ -45,14 +46,12 @@ class NightwaveCommand extends Command {
         try {
             data = await request(options);
         } catch (err) {
-            console.error(err);
+            zxc.error(err);
             return status.edit(`${message.author}, failed to get nightwave data.`);
         }
         console.timeEnd(`Worldstate API`);
 
         const challenges = data.nightwave.activeChallenges;
-
-        console.log(challenges);
 
         let daily = [];
         let weekly = [];
@@ -195,8 +194,8 @@ class NightwaveCommand extends Command {
      */
     center(text, width, type='text') {
 
-        if (!text) throw new Error('Missing text parameter');
-        if (!width) return console.error('Missing width parameter')
+        if (!text) return zxc.error('Missing text parameter');
+        if (!width) return zxc.error('Missing width parameter')
 
         if (text.length > width) return text;
 

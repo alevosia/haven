@@ -53,7 +53,7 @@ class WarframeWorldState extends EventEmitter {
 
                     zxc.info(`New Warframe Update: ${news[i].message}`)
 
-                    for (let j=news.length-1; j<=0; j--) {
+                    for (let j=news.length-1; j>=0; j--) {
                         zxc.info(`${j}: ${news[j].message}`);
                         console.log(`${j}: ${news[j].message}`);
                     }

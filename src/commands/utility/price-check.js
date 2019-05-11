@@ -46,7 +46,7 @@ module.exports = class PriceCheckCommand extends Command {
 
         if (data.length > 0) {
             message.react('✅');
-            status.edit(GetPriceCheckEmbed(data[0]))
+            status.edit(this.GetPriceCheckEmbed(data[0]))
         } else {
             message.react('❌');
             const channel = message.guild.channels.get(config.RivensChannelID);

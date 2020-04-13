@@ -2,20 +2,21 @@
   "name": "haven",
   "version": "3.1.2",
   "description": "A multi-purpose bot for Unforsaken Haven's Discord server.",
+  "private": true,
   "main": "src/haven.js",
   "scripts": {
     "start": "node src/haven.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alevfalse/haven.git"
+    "url": "git+https://github.com/alevosia/haven.git"
   },
   "author": "Alev",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alevfalse/haven/issues"
+    "url": "https://github.com/alevosia/haven/issues"
   },
-  "homepage": "https://github.com/alevfalse/haven#readme",
+  "homepage": "https://github.com/alevosia/haven#readme",
   "dependencies": {
     "bufferutil": "^4.0.1",
     "cheerio": "^1.0.0-rc.2",
